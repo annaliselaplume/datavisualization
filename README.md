@@ -31,6 +31,11 @@ I provide simple and labelled templates, designed to serve as cheat sheets for b
 
 ![Smooth line graph](https://user-images.githubusercontent.com/53012859/110858090-a8da3280-8287-11eb-9b21-3affdbb5e7d2.jpeg)
 
+## Citation ##
+Thank you for using this page! Feel free to use and share the code templates.
+To cite, please use
+LaPlume, A. A. (2021). Data Visualization in R. 
+https://doi.org/10.5281/zenodo.4599639
 
 
 
