@@ -1,0 +1,101 @@
+id,group,score,sex,age,age_group,follow_up
+1,placebo,3,male,15,10 to 20,6
+2,placebo,47,female ,40,40 to 50,38
+3,placebo,44,male,30,30 to 40,35
+4,placebo,28,male,38,30 to 40,22
+5,placebo,23,male,45,40 to 50,18
+6,placebo,79,male,74,70 to 80,8
+7,placebo,37,female ,16,10 to 20,30
+8,placebo,28,male,13,10 to 20,22
+9,placebo,11,female ,22,20 to 30,9
+10,placebo,27,female ,51,50 to 60,32
+11,placebo,48,female ,49,40 to 50,96
+12,placebo,71,male,44,40 to 50,57
+13,placebo,34,female ,21,20 to 30,9
+14,placebo,33,male,45,40 to 50,40
+15,placebo,57,female ,27,20 to 30,46
+16,placebo,11,male,55,50 to 60,13
+17,placebo,25,female ,52,50 to 60,20
+18,placebo,42,female ,64,60 to 70,34
+19,placebo,22,male,31,30 to 40,18
+20,placebo,28,male,23,20 to 30,56
+21,placebo,26,female ,47,40 to 50,29
+22,placebo,49,male,40,40 to 50,38
+23,placebo,13,female ,17,10 to 20,10
+24,placebo,11,male,59,50 to 60,87
+25,placebo,27,male,12,10 to 20,32
+26,placebo,37,male,60,60 to 70,30
+27,placebo,19,male,30,30 to 40,15
+28,placebo,56,female ,57,50 to 60,62
+29,placebo,23,male,22,20 to 30,46
+30,placebo,41,male,42,40 to 50,33
+31,placebo,27,female ,63,60 to 70,22
+32,placebo,50,male,79,70 to 80,55
+33,placebo,18,female ,16,10 to 20,20
+34,placebo,44,male,60,60 to 70,35
+35,placebo,10,male,26,20 to 30,11
+36,placebo,44,male,61,60 to 70,53
+37,placebo,31,female ,33,30 to 40,62
+38,placebo,47,female ,39,30 to 40,52
+39,placebo,51,male,68,60 to 70,41
+40,placebo,8,male,53,50 to 60,6
+41,placebo,9,female ,46,40 to 50,7
+42,placebo,31,female ,63,60 to 70,25
+43,placebo,33,female ,15,10 to 20,66
+44,placebo,30,male,20,20 to 30,73
+45,placebo,34,female ,67,60 to 70,27
+46,placebo,40,female ,38,30 to 40,47
+47,placebo,72,male,58,50 to 60,86
+48,placebo,6,female ,32,30 to 40,3
+49,placebo,42,male,72,70 to 80,34
+50,placebo,55,female ,40,40 to 50,44
+51,drug,90,male,24,20 to 30,72
+52,drug,88,female ,26,20 to 30,89
+53,drug,50,female ,18,10 to 20,60
+54,drug,69,male,44,40 to 50,55
+55,drug,79,female ,35,30 to 40,63
+56,drug,62,male,62,60 to 70,82
+57,drug,38,male,22,20 to 30,46
+58,drug,49,male,59,50 to 60,39
+59,drug,46,female ,12,10 to 20,37
+60,drug,66,female ,68,60 to 70,99
+61,drug,50,female ,21,20 to 30,40
+62,drug,83,female ,19,10 to 20,93
+63,drug,94,female ,52,50 to 60,89
+64,drug,76,female ,34,30 to 40,84
+65,drug,72,male,31,30 to 40,58
+66,drug,99,male,43,40 to 50,28
+67,drug,94,female ,78,70 to 80,95
+68,drug,91,male,14,10 to 20,88
+69,drug,84,male,15,10 to 20,92
+70,drug,64,female ,28,20 to 30,51
+71,drug,73,male,41,40 to 50,88
+72,drug,82,female ,42,40 to 50,90
+73,drug,71,male,64,60 to 70,57
+74,drug,68,male,39,30 to 40,82
+75,drug,92,male,57,50 to 60,74
+76,drug,62,female ,54,50 to 60,68
+77,drug,83,male,21,20 to 30,91
+78,drug,51,female ,66,60 to 70,61
+79,drug,42,male,68,60 to 70,46
+80,drug,62,male,25,20 to 30,50
+81,drug,81,male,63,60 to 70,65
+82,drug,33,male,75,70 to 80,66
+83,drug,62,female ,13,10 to 20,68
+84,drug,81,male,49,40 to 50,65
+85,drug,70,female ,19,10 to 20,84
+86,drug,26,female ,61,60 to 70,52
+87,drug,66,female ,50,50 to 60,53
+88,drug,79,male,30,30 to 40,87
+89,drug,72,female ,69,60 to 70,79
+90,drug,48,female ,29,20 to 30,38
+91,drug,71,female ,77,70 to 80,85
+92,drug,82,male,11,10 to 20,98
+93,drug,78,male,61,60 to 70,62
+94,drug,99,female ,22,20 to 30,79
+95,drug,52,male,46,40 to 50,57
+96,drug,61,female ,31,30 to 40,73
+97,drug,68,male,41,40 to 50,54
+98,drug,41,female ,71,70 to 80,82
+99,drug,68,male,21,20 to 30,75
+100,drug,55,female ,15,10 to 20,44

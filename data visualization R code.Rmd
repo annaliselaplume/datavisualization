@@ -1,0 +1,548 @@
+---
+title: "Data Visualization in R"
+author: "Annalise LaPlume"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    highlight: textmate
+    theme: paper
+    toc: yes
+    toc_depth: 3
+    toc_float: true
+  pdf_document:
+    toc: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, error=TRUE}
+## load packages
+if(!require("car"))install.packages("car") # Basic functions
+if(!require("plyr"))install.packages("plyr") 
+if(!require("base"))install.packages("base")
+if(!require("hablar"))install.packages("hablar")
+if(!require("tidyverse"))install.packages("tidyverse")
+if(!require("psych"))install.packages("psych") # Calculate descriptive statistics
+if(!require("ggplot2"))install.packages("ggplot2") # Plot results
+if(!require("raincloudplots"))install.packages("raincloudplots") # Raincloud plots
+if(!require("ggpubr"))install.packages("ggpubr") # Plot functions (e.g., correlations)
+
+
+source("R_rainclouds.R") # Raincloud plots scripts
+source("summarySE.R") # Raincloud plots calculations
+
+## Figure settings
+# width and height variables for saved plots
+w = 6
+h = 3 
+
+```
+
+```{r import data, include=FALSE, error=TRUE}
+## import dataset
+ds <- read.csv("C:/Users/.../sample_data.csv"",                     # Enter location of datafile here 
+    header = TRUE, sep = ",")
+
+# View sample of data
+head(ds)
+
+# Check format of variables
+str(ds)
+
+# Reformat variables 
+ds <- ds %>% 
+  convert(num(score, age),                                          # Specify numberic variables
+          fct(id, group, sex, age_group))                           # Specify factors/group variables
+
+# Set baseline (reference) level 
+levels(ds$group)                                                    # View levels of group
+ds$group = relevel(ds$group, ref="placebo")                         # Reorder levels to placebo as reference
+levels(ds$group)
+```
+
+# Descriptive statistics
+
+## n
+Number of individuals per group
+```{r group n, include=TRUE, echo=FALSE}
+table(ds$group)
+```
+Balanced number in each group
+
+## Background variables
+Sex
+```{r sex n, include=TRUE, echo=FALSE}
+table(ds$sex)
+```
+
+Age group
+```{r age group n, include=TRUE, echo=FALSE}
+table(ds$age_group)
+```
+
+Age
+```{r age, echo=FALSE}
+plyr::ddply(ds, ~group, summarise, 
+      mean=round(mean(age), 1), sd=round(sd(age), 1),
+      min=min(age), max=max(age))
+```
+
+## Dependent variables
+Test score (Assume lower score=worse, and higher score=better)
+```{r score, echo=FALSE}
+plyr::ddply(ds, ~group, summarise, 
+      mean=round(mean(score), 1), sd=round(sd(score), 1),
+      min=min(score), max=max(score))
+```
+
+# Distribution plots
+
+## Histogram
+```{r histogram, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=score,                                                 # Variable (x)
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_histogram(                                                   # Add histogram
+                 fill="grey", colour="black",                       # Format bin colour (fill) and outline (colour)
+                 position = "identity",                             # Statistic to present
+                 bins = 10,                                         # Number of bins/bars (can also specify binwidth)
+                 alpha=0.4) +                                       # Bar transparency
+    labs(x="Score", y="Frequency",                                  # Axis labels
+         title="Histogram") +                                       # Plot title
+       theme_classic() +                                            # Remove background grid
+         theme(legend.position = "none",                            # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis elements font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5))                # Title reposition to centre  
+
+# Alternate way to draw a histogram
+hist(ds$score,                                                      # Variable
+      xlab="Score", ylab="Frequency",                               # Axis labels 
+      main="Histogram",                                             # Plot title   
+     breaks=10)                                                     # Number of bins/bars
+```
+
+Different bar widths/number
+```{r histogram bar widths, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age,                                                   # Variable (x)
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_histogram(                                                   # Add histogram
+                 fill="grey", colour="black",                       # Format bin colour (fill) and outline (colour)
+                 position = "identity",                             # Statistic to present
+                 bins = 10,                                         # Number of bins/bars (can also specify binwidth)
+                 alpha=0.4) +                                       # Bar transparency
+    labs(x="Age", y="Frequency",                                    # Axis labels
+         title="Histogram (10 bins)") +                             # Plot title
+       theme_classic() +                                            # Remove background grid
+         theme(legend.position = "none",                            # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis elements font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5))                # Title reposition to centre  
+
+
+ggplot(data=ds,                                                     # Data
+       aes(x=age,                                                   # Variable (x)
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_histogram(                                                   # Add histogram
+                 fill="grey", colour="black",                       # Format bin colour (fill) and outline (colour)
+                 position = "identity",                             # Statistic to present
+                 bins = 7,                                          # Number of bins/bars (can also specify binwidth)
+                 alpha=0.4) +                                       # Bar transparency
+    labs(x="Age", y="Frequency",                                    # Axis labels
+         title="Histogram (7 bins)") +                              # Plot title
+       theme_classic() +                                            # Remove background grid
+         theme(legend.position = "none",                            # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis elements font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5))                # Title reposition to centre  
+```
+
+## Dotplot
+```{r dotplot, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=group, y = score,                                      # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+    labs(x="Group", y="Score",                                      # Axis labels
+         title="Dotplot") +                                         # Plot title
+       theme_classic() +                                            # Remove background grid
+         theme(legend.position = "none",                            # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis elements font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5))                # Title reposition to centre  
+```
+
+## Boxplot
+```{r boxplot, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=group, y = score,                                      # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+   labs(x="Group", y="Score",                                       # Axis labels
+        title="Boxplot") +                                          # Plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+              axis.text=element_text(size=12),                      # Axis elements font size
+              axis.title=element_text(size=12),                     # Axis font size                    
+              plot.title=element_text(size=14, face="bold",         # Axis font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre
+          geom_boxplot(notch=FALSE,                                 # Add boxplot outline
+                       alpha=0, width=0.3)                          # Format boxplot
+
+
+```
+
+Dotplot with superimposed boxplot
+```{r boxplot dotplot, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=group, y = score,                                      # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+   labs(x="Group", y="Score",                                       # Axis labels
+        title="Boxplot-dotplot") +                                          # Plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+              axis.text=element_text(size=12),                      # Axis elements font size
+              axis.title=element_text(size=12),                     # Axis font size                    
+              plot.title=element_text(size=14, face="bold",         # Axis font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre
+          geom_boxplot(notch=FALSE,                                 # Add boxplot outline
+                       alpha=0, colour="grey46", width=0.3)         # Format boxplot
+```
+
+## Violin plot
+```{r violin, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=group, y = score,                                      # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+    labs(x="Group", y="Score", title="Violin plot") +               # Axis labels and plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+              axis.text=element_text(size=12),                      # Axis elements font size
+              axis.title=element_text(size=12),                     # Axis font size
+              plot.title=element_text(size=14, face="bold",         # Title font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre     
+        geom_violin (alpha=0, width=0.3)                            # Add violin plot
+         
+```
+
+Dotplot with superimposed violin plot
+```{r violin dotplot, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=group, y = score,                                      # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+    labs(x="Group", y="Score", title="Violin-dotplot") +               # Axis labels and plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+              axis.text=element_text(size=12),                      # Axis elements font size
+              axis.title=element_text(size=12),                     # Axis font size
+              plot.title=element_text(size=14, face="bold",         # Title font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre     
+        geom_violin (                                               # Add violin plot outline
+                      alpha=0, colour="grey46", width=0.3) +        # Format violin plot
+          stat_summary(fun.data = "mean_sdl",                       # Add mean and error bars     
+                       fun.args = list(mult = 1), 
+                       geom = "pointrange",
+                       color = "black", size=0.2)                    
+```
+
+## Boxplot with many groups/categories
+```{r boxplot groups, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age_group, y = score,                                  # Variables (x, y)
+           colour=age_group, fill=age_group,                        # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+   labs(x="Age Group", y="Score",                                   # Axis labels
+        title="Boxplot with many groups") +                         # Plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+              axis.text=element_text(size=12),                      # Axis elements font size
+              axis.title=element_text(size=12),                     # Axis font size
+              plot.title=element_text(size=14, face="bold",         # Title font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre     
+          geom_boxplot(notch=FALSE,                                 # Add boxplot outline
+                       alpha=0)                                     # Format boxplot
+```
+
+## Violin plot with many groups/categories
+```{r violin groups, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age_group, y = score,                                  # Variables (x, y)
+           colour=age_group,                                        # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+    labs(x="Group", y="Score",                                      # Axis labels and
+         title="Violin plot with many groups") +                    # Plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre     
+          geom_violin (alpha=0) +                                   # Format violin plot
+            stat_summary(fun.data = "mean_sdl",                     # Add mean and error bars     
+                         fun.args = list(mult = 1), 
+                         geom = "pointrange",
+                         color = "grey", size=0.2) 
+```
+
+# x-y plots
+## Scatterplot
+```{r scatterplot, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score, colour=age,                            # Variables (x, y)
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+    labs(x="Age", y="Score", title="Scatterplot") +                 # Axis labels and plot title
+      theme_classic() +                                             # Format background
+        theme(legend.position = "none",                             # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5))                # Title reposition to centre     
+```
+
+
+## Scatterplot with groups
+Two groups
+```{r scatterplot 2 groups, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score,                                        # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+  labs(x="Age", y="Score", colour="Group",                          # Axis labels
+       title="Scatterplot with two groups") +                       # Plot title
+      theme_classic() +                                             # Format background
+    theme(axis.text=element_text(size=12),                          # Axis elements font size
+          axis.title=element_text(size=12),                         # Axis font size
+           plot.title=element_text(size=14, face="bold",            # Title font size and bolding
+                                    hjust = 0.5))                   # Title reposition to centre     
+```
+
+Many groups
+```{r scatterplot many groups, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score, colour=age_group,                      # Variables (x, y)
+           na.rm= TRUE)) +                                          # Remove missing values      
+ geom_point(size = 1.2,                                             # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+  labs(x="Age", y="Score", colour="Age Group",                      # Axis labels
+       title="Scatterplot with many groups") +                      # Plot title
+      theme_classic() +                                             # Format background
+  theme(axis.text=element_text(size=12),                            # Axis elements font size
+        axis.title=element_text(size=12),                           # Axis font size
+        plot.title=element_text(size=14, face="bold",               # Title font size and bolding
+                                hjust = 0.5))                       # Title reposition to centre     
+```
+
+## Line graph
+Linear regression, line of best fit
+```{r line graph, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score, colour=age,                            # Variables (x, y)
+           na.rm= TRUE)) +                                          # Remove missing values      
+ geom_point(size = 1.2,                                             # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+  labs(x="Age", y="Score",                                          # Axis labels
+       title="Line graph") +                                        # Plot title
+          theme_classic() +                                         # Format background
+            theme(legend.position = "none",                         # Remove legend
+                  axis.text=element_text(size=12),                  # Axis elements font size
+                  axis.title=element_text(size=12),                 # Axis font size
+                  plot.title=element_text(size=14, face="bold",     # Title font size and bolding
+                                          hjust = 0.5)) +           # Title reposition to centre     
+                    geom_smooth(method = "lm") +                    # straight line graph, 95% CI shaded in grey
+                      stat_cor(method = "pearson")                  # Pearson correlation
+```
+
+Add effect size (R-squared)
+```{r line graph R2, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score, colour=age      ,                      # Variables (x, y)
+           na.rm= TRUE)) +                                          # Remove missing values      
+ geom_point(size = 1.2,                                             # Data points (size)
+            alpha = .4,                                             # Data points (transparency)
+            position = position_jitter(width = 0.1)) +              # Data points (random variation)
+  labs(x="Age", y="Score",                                          # Axis labels
+       title="Line graph") +                                        # Plot title
+    theme_classic() +                                               # Format background
+      theme(legend.position = "none",                               # Remove legend
+            axis.text=element_text(size=12),                        # Axis elements font size
+            axis.title=element_text(size=12),                       # Axis font size
+            plot.title=element_text(size=14, face="bold",           # Title font size and bolding
+                                    hjust = 0.5)) +                 # Title reposition to centre     
+        geom_smooth(method = "lm") +                                # straight line graph, 95% CI shaded in grey
+          stat_cor(method = "pearson",                              # Pearson correlation
+            aes(label = paste(..rr.label..,                         # R-squared
+                              ..p.label.., sep = "~`,`~")))         # p-value 
+```
+
+## Line graph with two groups
+
+Two groups, both lines on the same graph
+```{r line graph 2 groups, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score,                                        # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+geom_point(size = 1.2,                                              # Data points (size)
+           alpha = .4,                                              # Data points (transparency)
+           position = position_jitter(width = 0.1)) +               # Data points (random variation)
+  labs(x="Age", y="Score", colour="Group",                          # Axis labels
+       title="Line graph by Group") +                               # Plot title
+    theme_classic() +                                               # Format background
+      geom_smooth(method = "lm") +                                  # straight line graph, 95% CI shaded in grey
+      stat_cor(method = "pearson",                                  # Pearson correlation
+              aes(label = paste(..rr.label..,                       # R-squared  
+                                ..p.label.., sep = "~`,`~"))) +     # p-value 
+        theme(legend.position = "none",                             # Remove legend
+              axis.text=element_text(size=12),                      # Axis elements font size
+              axis.title=element_text(size=12),                     # Axis font size
+             plot.title=element_text(size=14,                       # Title font size 
+                                     face="bold",                   # Title bolding
+                                     hjust = 0.5))                  # Title reposition to centre   
+```
+
+Two groups, side-by-side
+```{r line graph many groups, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score,                                        # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+ geom_point(size = 1.2,                                             # Data points (size)
+            alpha = .4,                                             # Data points (transparency)
+            position = position_jitter(width = 0.1)) +              # Data points (random variation)
+  labs(x="Age", y="Score", colour="Group",                          # Axis labels
+       title="Line graph by Group") +                               # Plot title
+          theme_classic() +                                         # Format background
+            geom_smooth(method = "lm") +                            # Straight line graph, 95% CI shaded in grey
+              stat_cor(method = "pearson",                          # Pearson correlation
+                       aes(label = paste(..rr.label..,              # R-squared
+                           ..p.label.., sep = "~`,`~"))) +          # p-value 
+                facet_wrap(. ~ group) +                             # Facet into separate graphs
+                  theme(legend.position = "none",                   # Remove legend
+                        axis.text=element_text(size=12),            # Axis elements font size
+                        axis.title=element_text(size=12),           # Axis font size
+                        plot.title=element_text(size=14,            # Title font size 
+                                                face="bold",        # Title bolding
+                                                hjust = 0.5),       # Title reposition to centre
+                         strip.text = element_text(size = 14))      # Text size of panel
+```
+
+
+## Smooth line graphs 
+Locally weighted regression scatterplot smoothing (loess)
+```{r loess, echo=FALSE}
+ggplot(data=ds,                                                     # Data
+       aes(x=age, y = score, colour=age,                            # Variables (x, y)
+           na.rm= TRUE)) +                                          # Remove missing values      
+ geom_point(size = 1.2,                                             # Data points (size)
+            alpha = .4,                                             # Data points (transparency)
+            position = position_jitter(width = 0.1)) +              # Data points (random variation)
+  labs(x="Age", y="Score",                                          # Axis labels
+       title="Smooth line graph") +                                 # Plot title
+    theme_classic() +                                               # Format background
+      theme(legend.position = "none",                               # Remove legend
+            axis.text=element_text(size=12),                        # Axis elements font size
+            axis.title=element_text(size=12),                       # Axis font size
+            plot.title=element_text(size=14,                        # Title font size 
+                                    face="bold",                    # Title bolding
+                                    hjust = 0.5)) +                 # Title reposition to centre      
+              geom_smooth(method = "loess",                         # straight line graph, 95% CI shaded in grey
+                          span=1)                                   # control amount of smoothing        
+```
+
+
+## Slope graph 
+
+```{r import repeated measures data, include=FALSE, error=TRUE}
+## import dataset
+ds_rep <- read.csv("C:/Users/.../rep_measures_data.csv", 
+    header = TRUE, sep = ",")
+
+# View sample of data
+head(ds_rep)                                                        # Arranged in long format
+
+# Check format of variables
+str(ds_rep)
+
+# Reformat variables 
+ds_rep <- ds_rep %>% 
+  convert(num(score),                                               # Specify numberic variables
+          fct(id, group, session))                                  # Specify factors/group variables
+
+# Set baseline (reference) level 
+levels(ds_rep$group)                                                # View levels of group
+ds_rep$group = relevel(ds_rep$group, ref="placebo")                 # Reorder levels to placebo as reference
+levels(ds_rep$group)                                                # Check levels of group
+
+levels(ds_rep$session)                                              # View levels of session
+ds_rep$session = relevel(ds_rep$session, ref="initial")             # Reorder levels to initial as reference
+levels(ds_rep$session)                                              # Check levels of session
+```
+
+View longitudinal dotplot
+```{r dotplot repeated measures, echo=FALSE}
+ggplot(data=ds_rep,                                                 # Data
+       aes(x=session, y = score,                                    # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           na.rm= TRUE)) +                                          # Remove missing values      
+  geom_point(size = 1.2,                                            # Data points (size)
+             alpha = .4,                                            # Data points (transparency)
+             position = position_jitter(width = 0.1)) +             # Data points (random variation)
+    labs(x="Session", y="Score",                                    # Axis labels
+         title="Dotplot for repeated measures") +                   # Plot title
+       theme_classic() +                                            # Remove background grid
+         theme(legend.position = "none",                            # Remove legend
+               axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis elements font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5))                # Title reposition to centre  
+```
+
+
+```{r slope graph, echo=FALSE}
+ggplot(data=ds_rep,                                                 # Data
+       aes(x=session, y = score,                                    # Variables (x, y)
+           colour=group,                                            # Grouping variable
+           group=id,                                                # Link participant scores to each other
+           na.rm= TRUE)) +                                          # Remove missing values      
+    labs(x="Session", y="Score",                                    # Axis labels
+         title="Slope graph for repeated measures") +               # Plot title
+       theme_classic() +                                            # Remove background grid
+         theme(axis.text=element_text(size=12),                     # Axis elements font size
+               axis.title=element_text(size=12),                    # Axis elements font size
+               plot.title=element_text(size=14, face="bold",        # Title font size and bolding
+                                       hjust = 0.5)) +              # Title reposition to centre  
+            geom_line(size = 1.2, alpha = .4,                       # Add lines
+                      position = position_jitter(width = 0.2, 
+                                                 height=0.5))
+```
