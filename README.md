@@ -5,13 +5,27 @@
 Code templates to create graphs using the using the ggplot2 package in R.
 Templates are completely annotated and easy to use, even for beginners to R. 
 
-Available files for this project
+<b> Available files </b>
 1. <i> "data visualization R code.rmd" </i> Code for how to draw graphs
 2. <i> "sample_data.csv" </i> Sample between-groups data for graphs
 3. <i> "rep_measures_data.csv" </i> Sample within-group data for graphs
 4. <i> "data visualization.html" </i> Output of R code, with examples of the possible visualizations
 
-Sample images
+<b> Sample images </b>
+
+![boxplot-dotplot](https://user-images.githubusercontent.com/53012859/110857907-687ab480-8287-11eb-97e7-d6aee6ed91cd.jpeg)
+
+![violin-dotplot](https://user-images.githubusercontent.com/53012859/110858016-9102ae80-8287-11eb-8f7f-8ae3b035c23a.jpeg)
+
+![boxplot many groups](https://user-images.githubusercontent.com/53012859/110858029-9829bc80-8287-11eb-967f-d9b793f5999c.jpeg)
+
+![Line graph by group](https://user-images.githubusercontent.com/53012859/110858047-9cee7080-8287-11eb-8fae-bf79bcdb35f8.jpeg)
+
+![scatterplot many groups](https://user-images.githubusercontent.com/53012859/110858078-a546ab80-8287-11eb-8c7d-9caf47254cb2.jpeg)
+
+![Smooth line graph](https://user-images.githubusercontent.com/53012859/110858090-a8da3280-8287-11eb-9b21-3affdbb5e7d2.jpeg)
+
+
 
 
 
