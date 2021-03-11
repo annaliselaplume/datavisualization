@@ -37,6 +37,7 @@ To cite, please use
 LaPlume, A. A. (2021). Data Visualization in R. 
 https://doi.org/10.5281/zenodo.4599639
 
+Writing code is similar to academic writing. When you use or adapt code created by another person, you must cite your source. (https://integrity.mit.edu/handbook/writing-code)
 
 
 
