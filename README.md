@@ -11,4 +11,9 @@ Available files for this project
 3. <i> "rep_measures_data.csv" </i> Sample within-group data for graphs
 4. <i> "data visualization.html" </i> Output of R code, with examples of the possible visualizations
 
+Sample images
+
+
+
+
 
