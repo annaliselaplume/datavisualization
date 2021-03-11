@@ -1,6 +1,6 @@
 # datavisualization
 
-<b> Templates for creating publication-ready plots in R.
+<b> Templates for creating publication-ready plots in R. <b>
 
 Code templates to create graphs using the using the ggplot2 package in R.
 Templates are completely annotated and easy to use, even for beginners to R. 
